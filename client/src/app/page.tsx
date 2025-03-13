@@ -1,6 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import useCalculator from './hooks/useCalculator';
+import InputNumber from './components/InputNumber';
+import OperationSelect from './components/OperationSelect';
+import Button from './components/Button';
+import ResultDisplay from './components/ResultDisplay';
 
 export default function Home() {
   const [num1, setNum1] = useState(0);
@@ -13,29 +17,28 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <input
-        type="number"
-        value={num1}
-        onChange={(e) => setNum1(Number(e.target.value))}
-      />
-      <select
-        value={operation}
-        onChange={(e) => setOperation(e.target.value)}
-      >
-        <option value="add">+</option>
-        <option value="subtract">-</option>
-        <option value="multiply">*</option>
-        <option value="divide">/</option>
-      </select>
-      <input
-        type="number"
-        value={num2}
-        onChange={(e) => setNum2(Number(e.target.value))}
-      />
-      <button onClick={handleCalculate}>Calcular</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {result !== null && <p>Resultado: {result}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-6 rounded-lg shadow-md w-80">
+        <h1 className="text-2xl font-bold text-center mb-4">Calculadora</h1>
+        <div className="space-y-4">
+          <InputNumber
+            value={num1}
+            onChange={(e: { target: { value: any; }; }) => setNum1(Number(e.target.value))}
+            placeholder="Número 1"
+          />
+          <OperationSelect
+            value={operation}
+            onChange={(e: { target: { value: SetStateAction<string>; }; }) => setOperation(e.target.value)}
+          />
+          <InputNumber
+            value={num2}
+            onChange={(e: { target: { value: any; }; }) => setNum2(Number(e.target.value))}
+            placeholder="Número 2"
+          />
+          <Button onClick={handleCalculate}>Calcular</Button>
+          <ResultDisplay result={result} error={error} />
+        </div>
+      </div>
     </div>
   );
 }

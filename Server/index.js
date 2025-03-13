@@ -1,25 +1,39 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const port = 3001;
 
-app.use(express.json());
+app.use(cors());
 
-app.post('/calculate', (req, res) => {
-  const { num1, num2, operation } = req.body;
+// Ruta para calcular usando query parameters
+app.get('/calculate', (req, res) => {
+  const { num1, num2, operation } = req.query;
+
+  // Convertir los números a tipo Number
+  const number1 = parseFloat(num1);
+  const number2 = parseFloat(num2);
+
+  // Validar que los números sean válidos
+  if (isNaN(number1) || isNaN(number2)) {
+    return res.status(400).json({ error: 'Números no válidos' });
+  }
+
   let result;
-
   switch (operation) {
     case 'add':
-      result = num1 + num2;
+      result = number1 + number2;
       break;
     case 'subtract':
-      result = num1 - num2;
+      result = number1 - number2;
       break;
     case 'multiply':
-      result = num1 * num2;
+      result = number1 * number2;
       break;
     case 'divide':
-      result = num1 / num2;
+      if (number2 === 0) {
+        return res.status(400).json({ error: 'No se puede dividir por cero' });
+      }
+      result = number1 / number2;
       break;
     default:
       return res.status(400).json({ error: 'Operación no válida' });
